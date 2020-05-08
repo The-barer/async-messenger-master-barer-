@@ -34,8 +34,12 @@ class ClientProtocol(asyncio.Protocol):
                 else:
                     self.login = temp_login
                     self.transport.write(
-                        f"Привет, {self.login}!".encode()
+                        str(f"Привет, {self.login}!\r\n").encode()
                     )
+                    if len(self.server.history) != 0:
+                        self.send_history(10)
+                    else:
+                        self.transport.write(str("--Кажется, тут еще не было сообщений!--").encode())
         else:
             self.send_message(decoded)
 
@@ -55,10 +59,7 @@ class ClientProtocol(asyncio.Protocol):
         self.transport = transport
         self.server.clients.append(self)
         print("Соединение установлено")
-        if len(self.server.history) != 0:
-            self.send_history(10)
-        else:
-            self.transport.write(str("--Кажется, тут еще не было сообщений!--").encode())
+        
 
     def connection_lost(self, exception):
         self.server.clients.remove(self)
