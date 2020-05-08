@@ -34,7 +34,7 @@ class ClientProtocol(asyncio.Protocol):
                 else:
                     self.login = temp_login
                     self.transport.write(
-                        f"Привет, {self.login}!\r\n".encode()
+                        f"Привет, {self.login}!".encode()
                     )
         else:
             self.send_message(decoded)
